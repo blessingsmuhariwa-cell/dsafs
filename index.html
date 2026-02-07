@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Beautiful Wife 💍</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --reze-pink: #ff00cc; 
+            --indie-blue: #00d4ff;
+            --liquid-glass: rgba(255, 255, 255, 0.12); 
+        }
+        
+        body, html { 
+            margin: 0; padding: 0; background: #000; color: white; 
+            font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; 
+            scroll-snap-type: y mandatory; height: 100vh;
+            overflow-x: hidden; -webkit-overflow-scrolling: touch;
+        }
+
+        #spotify-lyrics {
+            position: fixed; top: 25px; left: 0; width: 100%;
+            height: 150px; text-align: center; z-index: 1000; 
+            display: none; padding: 0 20px; box-sizing: border-box;
+            pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        }
+        .lyric-line {
+            font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.15); transition: all 0.2s ease-in-out;
+            margin: 5px 0; text-transform: lowercase; min-height: 1.5rem;
+        }
+        .lyric-line.active {
+            color: #fff; font-size: 1.1rem; opacity: 1;
+            text-shadow: 0 0 15px var(--indie-blue), 0 0 5px #fff;
+        }
+
+        .fixed-bg { position: fixed; inset: 0; z-index: -2; background: #000; }
+        .indie-moon {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 150vw; height: 150vh; z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.15) 0%, rgba(20, 5, 25, 1) 75%, #000 100%);
+        }
+
+        #main-container { display: none; }
+        .section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 25px; box-sizing: border-box; scroll-snap-align: start; }
+        .glass-card { 
+            background: var(--liquid-glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255, 255, 255, 0.15); padding: 35px; border-radius: 30px; 
+            max-width: 500px; width: 85%; text-align: center; opacity: 0; transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .section.visible .glass-card { opacity: 1; transform: translateY(0); }
+
+        .highlight-name { color: var(--reze-pink); font-weight: 600; }
+        .chapter-title { font-family: 'Pinyon Script', cursive; font-size: 3.5rem; color: var(--reze-pink); margin-bottom: 10px; }
+        .letter-text { font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.95); }
+        #timer { color: var(--indie-blue); font-weight: bold; margin: 20px 0; font-size: 1.3rem; letter-spacing: 1px; }
+
+        #envelope-overlay { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; cursor: pointer; }
+        .envelope { width: 140px; height: 90px; background: #ff4d94; border-radius: 0 0 10px 10px; box-shadow: 0 0 40px var(--reze-pink); position: relative; display: flex; justify-content: center; align-items: center;}
+        .envelope::before { content: ""; position: absolute; top: -50px; left: 0; border-bottom: 50px solid #ff4d94; border-left: 70px solid transparent; border-right: 70px solid transparent; }
+        
+        .glowing-x {
+            font-size: 32px; color: white; font-weight: bold;
+            text-shadow: 0 0 10px #fff, 0 0 20px var(--reze-pink), 0 0 40px var(--reze-pink);
+            animation: heartBeat 1.5s infinite; z-index: 10;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" playsinline preload="auto"><source src="song.mp3" type="audio/mpeg"></audio>
+
+    <div id="envelope-overlay" onclick="handleUnlock()">
+        <div class="envelope"><div class="glowing-x">X♡</div></div>
+        <p style="color:white; margin-top:50px; font-size:0.75rem; letter-spacing:5px; opacity:0.7;">TAP TO UNLOCK</p>
+    </div>
+
+    <div id="spotify-lyrics">
+        <div id="ly-prev" class="lyric-line"></div>
+        <div id="ly-curr" class="lyric-line active">...</div>
+        <div id="ly-next" class="lyric-line"></div>
+    </div>
+
+    <div class="fixed-bg"></div>
+    <div class="indie-moon"></div>
+
+    <div id="main-container">
+        <div class="section">
+            <div class="glass-card">
+                <h1 class="chapter-title">To My Queen...</h1>
+                <div id="timer">00d : 00h : 00m : 00s</div>
+                <p style="opacity:0.6; font-size:0.8rem; color: var(--indie-blue);">swipe up slowly baby...</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="glass-card">
+                <p class="letter-text">
+                    my dearest <span class="highlight-name">Mrs M</span> 🥺❤️💍<br><br>
+                    from the moment I noticed you, I had no idea I was looking at the woman who would change my life forever. what started as simple msgs between two people who had chemistry became the safest place my heart has ever known🥺🫶🏼
+                </p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="glass-card">
+                <p class="letter-text">
+                    since the day we made it official on <span class="highlight-name">3 November 2024</span>, you became my peace, my best friend, my home and the love I once prayed for.♡<br><br>
+                    we have crossed distance and created memories that still replay in my mind like my favorite movie.
+                </p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="glass-card">
+                <p class="letter-text">
+                    every single second with you is a chapter I would relive an <span class="highlight-name">infinity</span> times😭❤️🦋<br><br>
+                    your patience, your sacrifices and the way you continue to choose me remind me every day how blessed I am to call you mine🥺❤️😭
+                </p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="glass-card">
+                <p class="letter-text">
+                    I promise to keep choosing you, to keep growing with you and to keep building the beautiful story that is only just beginning.🌻
+                </p>
+                <h2 style="font-family:'Pinyon Script'; color:var(--reze-pink); font-size:2.8rem; margin:15px 0;">Happy Valentine's Day!</h2>
+                <p style="opacity:0.6; font-size:0.7rem; letter-spacing:3px; font-weight:bold;">MR & MRS MUHARIWA</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-music');
+        
+        // 🛠️ THE MASTER OFFSET: 
+        // If lyrics appear AFTER he sings, decrease this (e.g., 9.2).
+        // If lyrics appear BEFORE he sings, increase this (e.g., 10.0).
+        const OFFSET = 9.6; 
+
+        const lyrics = [
+            { t: 0, text: "🎶 (vibe to the rhythm) 🎶" },
+            { t: 0.1 + OFFSET, text: "come rewind oh" },
+            { t: 2.5 + OFFSET, text: "girl i get the money way fit make you mind oh" },
+            { t: 5.8 + OFFSET, text: "give you loving every night fit make you mad oh" },
+            { t: 8.5 + OFFSET, text: "na only you give me love wey make me nice oh" },
+            { t: 13.5 + OFFSET, text: "i fit make you mind oh" },
+            { t: 15.5 + OFFSET, text: "girl i love you plus i never make you mad oh" },
+            { t: 18.5 + OFFSET, text: "if i let you smoke is you gon' lose my lighter?" },
+            { t: 21.0 + OFFSET, text: "if you paranoid then i'ma spin a night oh" },
+            { t: 23.5 + OFFSET, text: "you can get that loving every day" },
+            { t: 26.5 + OFFSET, text: "diamond dancing with my money i go pay" },
+            { t: 29.5 + OFFSET, text: "for your love i go pay ah" },
+            { t: 31.8 + OFFSET, text: "e dey make me madly chase oh" },
+            { t: 34.5 + OFFSET, text: "ah i fit do for you every day" },
+            { t: 37.0 + OFFSET, text: "when you call from the back on replay" },
+            { t: 39.5 + OFFSET, text: "for your love i go pay ah" },
+            { t: 42.0 + OFFSET, text: "for your love i go play ah way" },
+            { t: 45.0 + OFFSET, text: "make i cycle, make i traffic cycle" },
+            { t: 48.0 + OFFSET, text: "baby every night i go check your cycle" },
+            { t: 51.0 + OFFSET, text: "everything you do don dey make me mad oh" },
+            { t: 54.0 + OFFSET, text: "make you sing sing to the microphone" },
+            { t: 57.0 + OFFSET, text: "you are that looking in your eyes oh" },
+            { t: 60.0 + OFFSET, text: "show you many things you can utilize oh" },
+            { t: 63.0 + OFFSET, text: "if i say i love you then i tell you like so" },
+            { t: 66.0 + OFFSET, text: "show you everything when i get in my zone" },
+            { t: 69.5 + OFFSET, text: "you can get that loving every day" },
+            { t: 72.0 + OFFSET, text: "diamond dancing with my money i go pay" },
+            { t: 75.0 + OFFSET, text: "for your love i go pay ah" },
+            { t: 78.0 + OFFSET, text: "e dey make me madly chase oh" },
+            { t: 80.5 + OFFSET, text: "ah i fit do for you every day" },
+            { t: 83.5 + OFFSET, text: "when you call from the back on replay" },
+            { t: 86.0 + OFFSET, text: "for your love i go pay ah" },
+            { t: 89.0 + OFFSET, text: "for your love i go play ah way" },
+            { t: 92.0 + OFFSET, text: "steady your body, moving it" },
+            { t: 95.0 + OFFSET, text: "see the way that you're grooving it" },
+            { t: 97.5 + OFFSET, text: "your love is a drug, i'm using it" },
+            { t: 100.5 + OFFSET, text: "bad girl and you know how you doing it" },
+            { t: 103.5 + OFFSET, text: "girl i'm in love with your vibe" },
+            { t: 106.0 + OFFSET, text: "the way you dey move and the way you dey wine" },
+            { t: 109.0 + OFFSET, text: "i'ma love you for life" },
+            { t: 112.0 + OFFSET, text: "never leave your side, i'm by your side" },
+            { t: 115.0 + OFFSET, text: "you can get that loving every day" },
+            { t: 118.0 + OFFSET, text: "diamond dancing with my money i go pay" },
+            { t: 121.0 + OFFSET, text: "for your love i go pay ah" },
+            { t: 124.0 + OFFSET, text: "e dey make me madly chase oh" },
+            { t: 127.0 + OFFSET, text: "ah i fit do for you every day" },
+            { t: 130.0 + OFFSET, text: "when you call from the back on replay" },
+            { t: 133.0 + OFFSET, text: "for your love i go pay ah" },
+            { t: 136.0 + OFFSET, text: "for your love i go play ah way" },
+            { t: 145.0 + OFFSET, text: "i'm with you till the end... ❤️" }
+        ];
+
+        function handleUnlock() {
+            document.getElementById('envelope-overlay').style.display = 'none';
+            document.getElementById('main-container').style.display = 'block';
+            document.getElementById('spotify-lyrics').style.display = 'block';
+            
+            startTimer();
+            initObserver();
+            
+            audio.play().catch(e => console.log("Play failed"));
+            
+            // Fast-Sync Loop (runs every 50ms for accuracy)
+            setInterval(() => {
+                const now = audio.currentTime;
+                const index = lyrics.findIndex((l, i) => now >= l.t && (!lyrics[i+1] || now < lyrics[i+1].t));
+                
+                if (index !== -1) {
+                    const curr = document.getElementById('ly-curr');
+                    if (curr.innerText !== lyrics[index].text) {
+                        document.getElementById('ly-prev').innerText = index > 0 ? lyrics[index-1].text : "";
+                        curr.innerText = lyrics[index].text;
+                        document.getElementById('ly-next').innerText = lyrics[index+1] ? lyrics[index+1].text : "";
+                    }
+                }
+            }, 50);
+        }
+
+        function initObserver() {
+            const obs = new IntersectionObserver((es) => {
+                es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.section').forEach(s => obs.observe(s));
+        }
+
+        function startTimer() {
+            const start = new Date("November 3, 2024 00:00:00").getTime();
+            setInterval(() => {
+                const diff = new Date().getTime() - start;
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const min = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                document.getElementById('timer').innerText = d + "d : " + h + "h : " + min + "m : " + s + "s";
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
